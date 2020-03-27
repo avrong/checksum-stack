@@ -1,0 +1,7 @@
+[package]
+name = "checksum-server"
+version = "0.1.0"
+authors = ["Aleksei Trifonov <avrong@avrong.me>"]
+edition = "2018"
+
+[dependencies]
