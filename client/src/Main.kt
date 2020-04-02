@@ -1,26 +1,33 @@
 import java.util.Arrays
 import kotlin.random.Random
 
+fun calculateChecksum(bytes: ByteArray): Byte {
+    return (bytes.sum() % 256).toByte()
+}
+
 fun toUnsingned(byte: Byte): Int {
     return byte.toInt().and(0xFF)
 }
 
-fun calculateChecksum(bytes: ByteArray): Byte {
-    return (bytes.sum() % 256).toByte()
+fun randomArray(arraySize: Int): ByteArray {
+    val bytes = ByteArray(20) { 1 }
+    Random.nextBytes(bytes, 0)
+    return bytes
 }
 
 fun main() {
     val client = ChecksumClient("127.0.0.1", 80)
 
-    val bytes = ByteArray(20) { 1 }
-    Random.nextBytes(bytes, 0)
+    while (true) {
+        val bytes = randomArray(20)
+        println("Generated array: ${bytes.map { toUnsingned(it) }}")
 
-    println(Arrays.toString(bytes))
+        val checksum = toUnsingned(client.requestChecksum(bytes))
+        val calculatedChecksum = toUnsingned(calculateChecksum(bytes))
+        println("Checksum: $checksum (server); $calculatedChecksum (local).")
 
-    val checksum = toUnsingned(client.requestChecksum(bytes))
-    val calculatedChecksum = toUnsingned(calculateChecksum(bytes))
+        Thread.sleep(2000)
+    }
 
-    println("$checksum $calculatedChecksum")
-
-    client.stop()
+//    client.stop()
 }

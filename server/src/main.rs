@@ -2,17 +2,19 @@ use std::net::{TcpListener, TcpStream};
 use std::io::{Read, Write};
 
 fn process(mut stream: TcpStream) {
-    let mut array: [u8; 20] = [0; 20];
+    loop {
+        let mut array: [u8; 20] = [0; 20];
 
-    stream.read(&mut array).expect("Cannot read");
+        stream.read(&mut array).expect("Cannot read bytes");
 
-    array.iter().for_each(|x| print!("{} ", x));
-    println!();
+        array.iter().for_each(|x| print!("{} ", x));
+        println!();
 
-    let checksum = array.iter().map(|x| *x as u16 ).sum::<u16>() % 256;
-    println!("Checksum: {}", checksum);
+        let checksum = array.iter().map(|x| *x as u16 ).sum::<u16>() % 256;
+        println!("Checksum: {}", checksum);
 
-    stream.write(&[checksum as u8]).expect("Cannot write back");
+        stream.write(&[checksum as u8]).expect("Cannot write back");
+    }
 }
 
 fn main() {
