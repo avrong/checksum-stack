@@ -5,7 +5,10 @@ fn process(mut stream: TcpStream) {
     loop {
         let mut array: [u8; 20] = [0; 20];
 
-        stream.read(&mut array).expect("Cannot read bytes");
+        match stream.read(&mut array) {
+            Err(e) => { println!("{}", e) }
+            _ => {}
+        };
 
         array.iter().for_each(|x| print!("{} ", x));
         println!();
@@ -13,7 +16,11 @@ fn process(mut stream: TcpStream) {
         let checksum = array.iter().map(|x| *x as u16 ).sum::<u16>() % 256;
         println!("Checksum: {}", checksum);
 
-        stream.write(&[checksum as u8]).expect("Cannot write back");
+        match stream.write(&[checksum as u8]) {
+            Err(e) => { println!("{}", e) }
+            _ => {}
+        };
+
     }
 }
 

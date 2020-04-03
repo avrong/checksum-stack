@@ -10,7 +10,7 @@ fun toUnsingned(byte: Byte): Int {
 }
 
 fun randomArray(arraySize: Int): ByteArray {
-    val bytes = ByteArray(20) { 1 }
+    val bytes = ByteArray(arraySize)
     Random.nextBytes(bytes, 0)
     return bytes
 }
@@ -20,6 +20,7 @@ fun main() {
 
     while (true) {
         val bytes = randomArray(20)
+        println("Generated array: ${bytes.map { it }}")
         println("Generated array: ${bytes.map { toUnsingned(it) }}")
 
         val checksum = toUnsingned(client.requestChecksum(bytes))
